@@ -32,28 +32,23 @@
   h1 { font-size: 22px; margin: 0 0 4px; letter-spacing: -0.01em; }
   .subtitle { color: var(--muted); font-size: 13px; }
 
-  /* Tiny year ribbon (Gantt overview) */
-  .ribbon { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px; margin: 16px 0 24px; }
-  .ribbon h3 { margin: 0 0 8px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 600; }
-  .ribbon-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  .ribbon-inner { min-width: 600px; position: relative; }
-  .axis { display: grid; grid-template-columns: repeat(8, 1fr); font-size: 10px; color: var(--muted); border-bottom: 1px solid var(--line); padding-bottom: 4px; margin-bottom: 6px; }
-  .axis span { text-align: left; }
-  .bars { display: flex; flex-direction: column; gap: 4px; position: relative; }
-  .bar-row { position: relative; height: 14px; }
-  .bar { position: absolute; height: 100%; border-radius: 3px; }
-  .bar.base { background: var(--base); }
-  .bar.event { background: var(--event); }
-  .bar.travel { background: var(--travel); }
-  .bar.festival { background: var(--festival); }
-  .bar.tentative { background: var(--tentative); opacity: 0.85; }
-  .today-line { position: absolute; top: 0; bottom: 0; width: 0; border-left: 2px dashed var(--warn); z-index: 2; }
-  .today-label { position: absolute; top: -16px; transform: translateX(-50%); font-size: 9px; color: var(--warn); font-weight: 600; white-space: nowrap; }
-
-  /* Legend */
-  .legend { display: flex; flex-wrap: wrap; gap: 10px 14px; margin: 12px 0 0; font-size: 12px; }
-  .legend span { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); }
-  .legend i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+  /* "Coming up" strip */
+  .upnext { margin: 16px 0 28px; }
+  .upnext h3 { margin: 0 0 10px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 600; }
+  .upnext-scroll { display: flex; gap: 10px; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 6px; scroll-snap-type: x mandatory; }
+  .upnext-scroll::-webkit-scrollbar { height: 4px; }
+  .upnext-scroll::-webkit-scrollbar-thumb { background: var(--line); border-radius: 2px; }
+  .upcard { flex: 0 0 180px; scroll-snap-align: start; background: var(--card); border: 1px solid var(--line); border-left-width: 4px; border-radius: 10px; padding: 12px 14px; }
+  .upcard.base { border-left-color: var(--base); }
+  .upcard.event { border-left-color: var(--event); }
+  .upcard.travel { border-left-color: var(--travel); }
+  .upcard.festival { border-left-color: var(--festival); }
+  .upcard.tentative { border-left-color: var(--tentative); }
+  .upcard.now { background: #1a1a1a; color: white; border-color: var(--ink); }
+  .upcard.now .uc-count, .upcard.now .uc-when { color: rgba(255,255,255,0.7); }
+  .uc-count { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+  .uc-title { font-size: 14px; font-weight: 600; line-height: 1.3; margin-bottom: 4px; }
+  .uc-when { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
 
   /* Agenda */
   .month-block { margin-bottom: 24px; }
@@ -88,21 +83,9 @@
   <div class="subtitle">Snapshot as of 2026-05-10. Some legs still tentative.</div>
 </header>
 
-<section class="ribbon" id="ribbon-section">
-  <h3>Overview — May to Dec 2026</h3>
-  <div class="ribbon-scroll">
-    <div class="ribbon-inner" id="ribbon-inner">
-      <div class="axis" id="ribbon-axis"></div>
-      <div class="bars" id="ribbon-bars"></div>
-    </div>
-  </div>
-  <div class="legend">
-    <span><i style="background:var(--base)"></i> Base</span>
-    <span><i style="background:var(--festival)"></i> Festival</span>
-    <span><i style="background:var(--event)"></i> Event</span>
-    <span><i style="background:var(--travel)"></i> Travel</span>
-    <span><i style="background:var(--tentative)"></i> Tentative</span>
-  </div>
+<section class="upnext">
+  <h3>Coming up</h3>
+  <div class="upnext-scroll" id="upnext-scroll"></div>
 </section>
 
 <div id="agenda"></div>
@@ -131,36 +114,40 @@ const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct",
 const monthFullNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 const TODAY = "2026-05-10";
 
-const RIBBON_START = new Date(Date.UTC(2026, 4, 1));   // May 1
-const RIBBON_END   = new Date(Date.UTC(2026, 11, 31)); // Dec 31
-const totalDays = Math.round((RIBBON_END - RIBBON_START) / 86400000) + 1;
-
 function parseUTC(s) { return new Date(s + "T00:00:00Z"); }
-function dayIndex(d) { return Math.round((d - RIBBON_START) / 86400000); }
-function pct(d) { return (dayIndex(d) / totalDays) * 100; }
+const todayD = parseUTC(TODAY);
 
-// --- Build ribbon axis (8 months) ---
-const axis = document.getElementById("ribbon-axis");
-for (let m = 4; m <= 11; m++) axis.innerHTML += `<span>${monthNames[m]}</span>`;
+// --- Build "Coming up" strip: next 5 events that haven't ended yet ---
+function daysFromToday(d) { return Math.round((d - todayD) / 86400000); }
+function relWord(d) {
+  const diff = daysFromToday(d);
+  if (diff < 0) return "now";
+  if (diff === 0) return "today";
+  if (diff === 1) return "tomorrow";
+  if (diff < 14) return `in ${diff} days`;
+  if (diff < 60) return `in ${Math.round(diff / 7)} weeks`;
+  return `in ${Math.round(diff / 30)} months`;
+}
+const upcoming = events
+  .filter(ev => parseUTC(ev.end) >= todayD)
+  .sort((a, b) => parseUTC(a.start) - parseUTC(b.start))
+  .slice(0, 6);
 
-// --- Build ribbon bars ---
-const ribbonBars = document.getElementById("ribbon-bars");
-events.forEach(ev => {
-  const left = pct(parseUTC(ev.start));
-  const right = pct(parseUTC(ev.end)) + (1 / totalDays) * 100;
-  const row = document.createElement("div");
-  row.className = "bar-row";
-  row.innerHTML = `<div class="bar ${ev.type}" style="left:${left}%;width:${right - left}%" title="${ev.name}"></div>`;
-  ribbonBars.appendChild(row);
+const upScroll = document.getElementById("upnext-scroll");
+upcoming.forEach(ev => {
+  const start = parseUTC(ev.start);
+  const end = parseUTC(ev.end);
+  const isNow = start <= todayD && todayD <= end;
+  const label = isNow ? "now" : relWord(start);
+  const card = document.createElement("div");
+  card.className = `upcard ${ev.type}${isNow ? " now" : ""}`;
+  card.innerHTML = `
+    <div class="uc-count">${label}</div>
+    <div class="uc-title">${ev.name}</div>
+    <div class="uc-when">${fmtRange(ev.start, ev.end)}</div>
+  `;
+  upScroll.appendChild(card);
 });
-
-// --- Today marker ---
-const todayPct = pct(parseUTC(TODAY));
-const todayLine = document.createElement("div");
-todayLine.className = "today-line";
-todayLine.style.left = todayPct + "%";
-todayLine.innerHTML = `<div class="today-label" style="left:0">Today</div>`;
-document.getElementById("ribbon-inner").appendChild(todayLine);
 
 // --- Build agenda grouped by month ---
 function fmtRange(s, e) {
