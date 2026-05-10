@@ -6,109 +6,96 @@
 <title>Jeff + Noor — Summer/Fall 2026</title>
 <style>
   :root {
-    --bg: #faf8f5;
-    --card: #ffffff;
-    --ink: #1a1a1a;
-    --muted: #6b6863;
-    --line: #e7e3dc;
-    --base: #2563eb;
-    --trip: #ea580c;
-    --visitor: #16a34a;
-    --event: #9333ea;
-    --move: #b45309;
-    --solo: #db2777;
-    --tentative: #94a3b8;
-    --warn: #b91c1c;
+    --bg: #ffffff;
+    --ink: #1d1d1f;
+    --ink-2: rgba(29,29,31,0.6);
+    --ink-3: rgba(29,29,31,0.42);
+    --divider: rgba(29,29,31,0.08);
+    --accent: #0071e3;
+    --warn: #c11e25;
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", system-ui, sans-serif;
     background: var(--bg);
     color: var(--ink);
-    line-height: 1.45;
+    line-height: 1.5;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
     -webkit-text-size-adjust: 100%;
   }
-  .wrap { max-width: 720px; margin: 0 auto; padding: 24px 16px 80px; }
-  header { margin-bottom: 22px; }
-  h1 { font-size: 22px; margin: 0 0 4px; letter-spacing: -0.01em; }
-  .subtitle { color: var(--muted); font-size: 13px; }
+  .wrap { max-width: 640px; margin: 0 auto; padding: 48px 22px 96px; }
 
-  .legend { display: flex; flex-wrap: wrap; gap: 8px 12px; margin: 14px 0 24px; font-size: 11px; }
-  .legend span { display: inline-flex; align-items: center; gap: 5px; color: var(--muted); }
-  .legend i { width: 9px; height: 9px; border-radius: 2px; display: inline-block; }
+  header { margin-bottom: 44px; }
+  h1 { font-size: 32px; font-weight: 700; letter-spacing: -0.022em; margin: 0 0 4px; line-height: 1.15; }
+  .subtitle { color: var(--ink-3); font-size: 14px; font-weight: 400; }
 
-  /* Basecamp section */
-  .bc { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 16px 14px; margin-bottom: 14px; border-left: 4px solid var(--base); }
-  .bc.upcoming { opacity: 0.95; }
-  .bc.past { opacity: 0.55; }
-  .bc-status { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; color: var(--base); margin-bottom: 4px; }
-  .bc-status .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--base); }
+  .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-3); font-weight: 600; }
+
+  /* Basecamp */
+  .bc { padding: 36px 0; border-top: 1px solid var(--divider); }
+  .bc:first-of-type { border-top: none; padding-top: 0; }
+  .bc.past .bc-name, .bc.past .bc-where, .bc.past .bc-note { color: var(--ink-3); }
+  .bc-status { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+  .bc-status .label { color: var(--accent); }
+  .bc.active .bc-status .label { color: var(--accent); }
+  .bc.upcoming .bc-status .label { color: var(--ink-3); }
+  .bc-status .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
   .bc.active .bc-status .dot { animation: pulse 1.8s infinite ease-in-out; }
-  @keyframes pulse { 0%,100% { opacity: 1 } 50% { opacity: 0.3 } }
-  .bc-name { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 2px; }
-  .bc-when { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; margin-bottom: 8px; }
-  .bc-where { font-size: 14px; margin-bottom: 6px; }
-  .bc-note { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
-  .bc-countdown { font-size: 11px; font-weight: 600; color: var(--warn); text-transform: uppercase; letter-spacing: 0.05em; }
+  .bc.upcoming .bc-status .dot { background: var(--ink-3); }
+  @keyframes pulse { 0%,100% { transform: scale(1); opacity: 1 } 50% { transform: scale(1.35); opacity: 0.5 } }
 
-  .bc-sec { margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--line); }
-  .bc-sec h4 { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin: 0 0 8px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
-  .bc-sec h4 i { width: 8px; height: 8px; border-radius: 2px; }
+  .bc-name { font-size: 30px; font-weight: 700; letter-spacing: -0.022em; line-height: 1.1; margin: 0 0 6px; }
+  .bc-when { font-size: 15px; color: var(--ink-2); font-variant-numeric: tabular-nums; margin-bottom: 4px; }
+  .bc-where { font-size: 15px; color: var(--ink-2); margin-bottom: 6px; }
+  .bc-note { font-size: 14px; color: var(--ink-3); margin-bottom: 0; }
+  .bc-countdown { font-size: 13px; color: var(--ink-3); margin-top: 10px; font-variant-numeric: tabular-nums; }
 
-  .sub { background: var(--bg); border-radius: 8px; padding: 10px 12px; margin-bottom: 6px; border-left: 3px solid var(--line); }
-  .sub.trip { border-left-color: var(--trip); }
-  .sub.visitor { border-left-color: var(--visitor); }
-  .sub.event { border-left-color: var(--event); }
-  .sub.tentative { border-left-color: var(--tentative); }
-  .sub-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px; }
-  .sub-when { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; font-weight: 500; }
-  .sub-title { font-size: 14px; font-weight: 600; }
-  .sub-pill { font-size: 9px; padding: 2px 6px; border-radius: 3px; background: var(--tentative); color: white; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; }
-  .sub-pill.warn { background: var(--warn); }
-  .sub-note { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .bc-sec { margin-top: 28px; }
+  .bc-sec .label { margin-bottom: 14px; display: block; }
 
-  /* Move transition */
-  .move-block { padding: 0 8px; margin: 14px 0; border-left: 3px dashed var(--move); margin-left: 14px; }
-  .move-block .mb-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--move); font-weight: 700; margin-bottom: 6px; }
-  .move-stop { font-size: 13px; padding: 6px 0; color: var(--ink); }
-  .move-stop .ms-when { color: var(--muted); font-size: 12px; }
-  .move-stop .ms-name { font-weight: 600; }
+  .row { padding: 12px 0; border-top: 1px solid var(--divider); display: flex; gap: 14px; align-items: flex-start; }
+  .row:last-child { border-bottom: 1px solid var(--divider); }
+  .row-when { flex: 0 0 90px; font-size: 13px; color: var(--ink-3); font-variant-numeric: tabular-nums; padding-top: 1px; }
+  .row-body { flex: 1; min-width: 0; }
+  .row-title { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.35; }
+  .row-title .tentative { font-size: 11px; font-weight: 500; color: var(--ink-3); margin-left: 6px; vertical-align: middle; text-transform: lowercase; letter-spacing: 0; }
+  .row-note { font-size: 13px; color: var(--ink-3); margin-top: 4px; line-height: 1.45; }
 
-  /* Solo track */
-  .solo-block { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-top: 22px; border-left: 4px solid var(--solo); }
-  .solo-block h3 { margin: 0 0 8px; font-size: 13px; font-weight: 700; color: var(--solo); text-transform: uppercase; letter-spacing: 0.05em; }
-  .solo-sub { background: var(--bg); border-left: 3px solid var(--solo); padding: 10px 12px; margin-bottom: 6px; border-radius: 8px; }
-  .solo-sub .sub-when { color: var(--muted); }
+  /* Move */
+  .move { padding: 28px 0; border-top: 1px solid var(--divider); }
+  .move .label { margin-bottom: 14px; display: block; }
+  .move-route { font-size: 17px; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 14px; color: var(--ink); }
 
-  footer { color: var(--muted); font-size: 12px; margin-top: 32px; text-align: center; }
+  /* Solo */
+  .solo { padding: 36px 0; border-top: 1px solid var(--divider); }
+  .solo .label { margin-bottom: 14px; display: block; }
+  .solo h3 { font-size: 24px; font-weight: 700; letter-spacing: -0.018em; margin: 0 0 18px; }
+
+  footer { color: var(--ink-3); font-size: 12px; margin-top: 56px; text-align: center; }
+
+  @media (min-width: 640px) {
+    h1 { font-size: 40px; }
+    .bc-name { font-size: 36px; }
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
 <header>
-  <h1>Jeff + Noor &mdash; Summer/Fall 2026</h1>
-  <div class="subtitle">Snapshot as of 2026-05-10.</div>
-  <div class="legend">
-    <span><i style="background:var(--base)"></i> Basecamp</span>
-    <span><i style="background:var(--trip)"></i> Trip from base</span>
-    <span><i style="background:var(--visitor)"></i> Visitor</span>
-    <span><i style="background:var(--event)"></i> Event</span>
-    <span><i style="background:var(--move)"></i> Move day</span>
-    <span><i style="background:var(--solo)"></i> Solo</span>
-    <span><i style="background:var(--tentative)"></i> Tentative</span>
-  </div>
+  <h1>Summer / Fall 2026</h1>
+  <div class="subtitle">Jeff + Noor. Snapshot as of May 10.</div>
 </header>
 
 <main id="main"></main>
 
-<footer>Generated by Wanda. Ping me to update.</footer>
+<footer>Updated by Wanda</footer>
 </div>
 
 <script>
 const TODAY = "2026-05-10";
 const today = new Date(TODAY + "T00:00:00Z");
-
 const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
 const basecamps = [
@@ -119,11 +106,11 @@ const basecamps = [
     where: "Airbnb on Olympic Rd",
     note: "Tope, Banjo, Bakso. Pool guy: Cameron.",
     visitors: [
-      { name: "Sarah", start: "2026-05-16", end: "2026-05-20", note: "Flies into PSP, crashes at the Airbnb, out via PSP morning of May 20." }
+      { name: "Sarah", start: "2026-05-16", end: "2026-05-20", note: "Flies into PSP, stays at the Airbnb, out via PSP morning of May 20." }
     ],
     trips: [
-      { name: "Noor — Packard talk", start: "2026-05-20", end: "2026-05-20", tentative: false, note: "Day-trip, Los Altos. PSP → SJC." },
-      { name: "Lightning in a Bottle", start: "2026-05-20", end: "2026-05-24", tentative: false, note: "Buena Vista Lake. Banjo + Bakso boarded near JT. Exit Mon May 25." }
+      { name: "Noor — Packard talk", start: "2026-05-20", end: "2026-05-20", tentative: false, note: "Day trip, Los Altos. PSP → SJC." },
+      { name: "Lightning in a Bottle", start: "2026-05-20", end: "2026-05-24", tentative: false, note: "Buena Vista Lake. Dogs boarded near JT. Exit Mon May 25." }
     ],
     events: []
   },
@@ -131,11 +118,11 @@ const basecamps = [
     name: "Portland",
     start: "2026-06-13",
     end: null,
-    where: "TBD (Airbnb, friends, or Tope-only)",
-    note: "Arrival mid-June. Length still open.",
+    where: "Lodging TBD",
+    note: "Arrival mid-June. Length open.",
     visitors: [],
     trips: [
-      { name: "Camp Cedar Creek (4th of July)", start: "2026-07-04", end: "2026-07-04", tentative: true, note: "Location TBD. May collide with Noor's July Europe trip." }
+      { name: "Camp Cedar Creek", start: "2026-07-04", end: "2026-07-04", tentative: true, note: "4th of July party. Location TBD. May collide with Noor's July Europe trip." }
     ],
     events: []
   }
@@ -143,21 +130,21 @@ const basecamps = [
 
 const moves = [
   {
-    label: "JT → Portland transit",
+    route: "Joshua Tree → Portland",
     start: "2026-06-04",
     end: "2026-06-12",
     stops: [
-      { name: "Canada Cottage", start: "2026-06-01", end: "2026-06-05", tentative: true, note: "Dates and location still TBD. Likely collides with Kift / Sierras / Brazil." },
+      { name: "Canada Cottage", start: "2026-06-01", end: "2026-06-05", tentative: true, note: "Dates and location still TBD. May collide with Kift, Sierras, or Brazil." },
       { name: "Kift Reunion", start: "2026-06-05", end: "2026-06-08", tentative: true, note: "Location TBD." },
-      { name: "Sierras leg (Tope drive)", start: "2026-06-08", end: "2026-06-12", tentative: false, note: "Route TBD: east 395 (Mammoth, Alabama Hills, Mono Lake) vs west (Yosemite east, Sonora Pass)." }
+      { name: "Sierras (Tope drive)", start: "2026-06-08", end: "2026-06-12", tentative: false, note: "Route TBD: east 395 (Mammoth, Alabama Hills, Mono Lake) or west (Yosemite east, Sonora Pass)." }
     ]
   }
 ];
 
 const solos = [
-  { person: "Noor", name: "Brazil", start: "2026-06-08", end: "2026-06-13", tentative: true, note: "Possibly happening. Peels off mid-Sierras leg, regroups with Jeff Jun 13+." },
-  { person: "Noor", name: "Europe", start: "2026-07-01", end: "2026-07-31", tentative: true, note: "From citizenship tracker, status 'likely'. Destination TBD." },
-  { person: "Noor", name: "Africa", start: "2026-10-01", end: "2026-10-31", tentative: true, note: "From citizenship tracker, status 'likely'. Destination TBD." }
+  { name: "Brazil", start: "2026-06-08", end: "2026-06-13", tentative: true, note: "Possibly happening. Peels off mid-Sierras, regroups with Jeff after Jun 13." },
+  { name: "Europe", start: "2026-07-01", end: "2026-07-31", tentative: true, note: "From the citizenship tracker, status \"likely\". Destination TBD." },
+  { name: "Africa", start: "2026-10-01", end: "2026-10-31", tentative: true, note: "From the citizenship tracker, status \"likely\". Destination TBD." }
 ];
 
 function parseUTC(s) { return new Date(s + "T00:00:00Z"); }
@@ -165,13 +152,25 @@ function fmtRange(s, e) {
   const sd = parseUTC(s);
   const sm = monthNames[sd.getUTCMonth()];
   const sdd = sd.getUTCDate();
-  if (!e) return `from ${sm} ${sdd}`;
+  if (!e) return `From ${sm} ${sdd}`;
   const ed = parseUTC(e);
   const em = monthNames[ed.getUTCMonth()];
   const edd = ed.getUTCDate();
   if (s === e) return `${sm} ${sdd}`;
   if (sm === em) return `${sm} ${sdd}–${edd}`;
   return `${sm} ${sdd} – ${em} ${edd}`;
+}
+function fmtShortRange(s, e) {
+  const sd = parseUTC(s);
+  const sm = monthNames[sd.getUTCMonth()];
+  const sdd = sd.getUTCDate();
+  if (!e) return `${sm} ${sdd}`;
+  const ed = parseUTC(e);
+  const em = monthNames[ed.getUTCMonth()];
+  const edd = ed.getUTCDate();
+  if (s === e) return `${sm} ${sdd}`;
+  if (sm === em) return `${sm} ${sdd}–${edd}`;
+  return `${sm} ${sdd}–${em} ${edd}`;
 }
 function daysBetween(a, b) { return Math.round((b - a) / 86400000); }
 
@@ -183,56 +182,49 @@ function bcStatus(bc) {
   return "past";
 }
 
-function renderSub(item, kind) {
-  const cls = item.tentative ? "tentative" : kind;
-  const pill = item.tentative ? `<span class="sub-pill">tentative</span>` : "";
+function row(item) {
   return `
-    <div class="sub ${cls}">
-      <div class="sub-head">
-        <span class="sub-when">${fmtRange(item.start, item.end)}</span>
-        <span class="sub-title">${item.name}</span>
-        ${pill}
+    <div class="row">
+      <div class="row-when">${fmtShortRange(item.start, item.end)}</div>
+      <div class="row-body">
+        <div class="row-title">${item.name}${item.tentative ? ` <span class="tentative">tentative</span>` : ""}</div>
+        ${item.note ? `<div class="row-note">${item.note}</div>` : ""}
       </div>
-      ${item.note ? `<div class="sub-note">${item.note}</div>` : ""}
     </div>`;
 }
 
 function renderBasecamp(bc) {
   const status = bcStatus(bc);
-  let header;
+  let statusLabel = "";
   let countdown = "";
   if (status === "active") {
-    const e = bc.end ? parseUTC(bc.end) : null;
-    if (e) {
-      const left = daysBetween(today, e);
+    statusLabel = `<div class="bc-status"><span class="dot"></span><span class="label">Active basecamp</span></div>`;
+    if (bc.end) {
+      const left = daysBetween(today, parseUTC(bc.end));
       countdown = `<div class="bc-countdown">${left} days left here</div>`;
-    } else {
-      countdown = `<div class="bc-countdown">Open-ended</div>`;
     }
-    header = `<span class="bc-status"><span class="dot"></span>Active basecamp</span>`;
   } else if (status === "upcoming") {
-    const s = parseUTC(bc.start);
-    const inDays = daysBetween(today, s);
+    statusLabel = `<div class="bc-status"><span class="dot"></span><span class="label">Next basecamp</span></div>`;
+    const inDays = daysBetween(today, parseUTC(bc.start));
     countdown = `<div class="bc-countdown">In ${inDays} days</div>`;
-    header = `<span class="bc-status"><span class="dot"></span>Upcoming basecamp</span>`;
   } else {
-    header = `<span class="bc-status"><span class="dot"></span>Past basecamp</span>`;
+    statusLabel = `<div class="bc-status"><span class="dot"></span><span class="label">Past basecamp</span></div>`;
   }
 
   let inside = "";
   if (bc.visitors.length) {
-    inside += `<div class="bc-sec"><h4><i style="background:var(--visitor)"></i>Visitors</h4>${bc.visitors.map(v => renderSub(v, "visitor")).join("")}</div>`;
+    inside += `<div class="bc-sec"><div class="label">Visitors</div>${bc.visitors.map(row).join("")}</div>`;
   }
   if (bc.trips.length) {
-    inside += `<div class="bc-sec"><h4><i style="background:var(--trip)"></i>Trips from base</h4>${bc.trips.map(t => renderSub(t, "trip")).join("")}</div>`;
+    inside += `<div class="bc-sec"><div class="label">Trips from base</div>${bc.trips.map(row).join("")}</div>`;
   }
   if (bc.events.length) {
-    inside += `<div class="bc-sec"><h4><i style="background:var(--event)"></i>Local events</h4>${bc.events.map(ev => renderSub(ev, "event")).join("")}</div>`;
+    inside += `<div class="bc-sec"><div class="label">Local events</div>${bc.events.map(row).join("")}</div>`;
   }
 
   return `
     <section class="bc ${status}">
-      ${header}
+      ${statusLabel}
       <h2 class="bc-name">${bc.name}</h2>
       <div class="bc-when">${fmtRange(bc.start, bc.end)}</div>
       <div class="bc-where">${bc.where}</div>
@@ -244,37 +236,22 @@ function renderBasecamp(bc) {
 
 function renderMove(mv) {
   return `
-    <div class="move-block">
-      <div class="mb-label">Move &middot; ${fmtRange(mv.start, mv.end)} &middot; ${mv.label}</div>
-      ${mv.stops.map(stop => `
-        <div class="move-stop">
-          <span class="ms-when">${fmtRange(stop.start, stop.end)}</span> &middot;
-          <span class="ms-name">${stop.name}</span>
-          ${stop.tentative ? ` <span class="sub-pill">tentative</span>` : ""}
-          ${stop.note ? `<div class="sub-note">${stop.note}</div>` : ""}
-        </div>
-      `).join("")}
-    </div>`;
+    <section class="move">
+      <div class="label">Move &middot; ${fmtRange(mv.start, mv.end)}</div>
+      <div class="move-route">${mv.route}</div>
+      ${mv.stops.map(row).join("")}
+    </section>`;
 }
 
 function renderSolo() {
   return `
-    <div class="solo-block">
-      <h3>Noor &mdash; solo trips</h3>
-      ${solos.map(s => `
-        <div class="solo-sub">
-          <div class="sub-head">
-            <span class="sub-when">${fmtRange(s.start, s.end)}</span>
-            <span class="sub-title">${s.name}</span>
-            ${s.tentative ? `<span class="sub-pill">tentative</span>` : ""}
-          </div>
-          ${s.note ? `<div class="sub-note">${s.note}</div>` : ""}
-        </div>
-      `).join("")}
-    </div>`;
+    <section class="solo">
+      <div class="label">Solo</div>
+      <h3>Noor's trips</h3>
+      ${solos.map(row).join("")}
+    </section>`;
 }
 
-// Render in order: Joshua Tree → move → Portland → solo track at bottom
 const main = document.getElementById("main");
 main.innerHTML = `
   ${renderBasecamp(basecamps[0])}
