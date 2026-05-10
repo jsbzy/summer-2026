@@ -66,6 +66,14 @@
   .row-title { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.35; }
   .row-title .tentative { font-size: 11px; font-weight: 500; color: var(--ink-3); margin-left: 6px; vertical-align: middle; text-transform: lowercase; letter-spacing: 0; }
   .row-note { font-size: 13px; color: var(--ink-3); margin-top: 4px; line-height: 1.45; }
+  .row-links { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .row-links a { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--accent); text-decoration: none; padding: 3px 8px; border-radius: 6px; background: rgba(0,113,227,0.08); }
+  .row-links a:hover { background: rgba(0,113,227,0.14); }
+  .row-links a::after { content: "↗"; font-size: 10px; opacity: 0.7; }
+  .bc-links { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .bc-links a { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; color: var(--accent); text-decoration: none; padding: 5px 10px; border-radius: 7px; background: rgba(0,113,227,0.08); font-weight: 500; }
+  .bc-links a:hover { background: rgba(0,113,227,0.14); }
+  .bc-links a::after { content: "↗"; font-size: 11px; opacity: 0.7; }
 
   /* Move */
   .move { padding: 28px 0; border-top: 1px solid var(--divider); }
@@ -127,7 +135,7 @@ const basecamps = [
     visitors: [],
     trips: [
       { name: "Camp Cedar Creek", start: "2026-07-04", end: "2026-07-04", tentative: true, note: "4th of July campout. Location TBD." },
-      { name: "Ontario Cottage", start: "2026-07-06", end: "2026-07-12", tentative: true, note: "Cottage country in Canada, right after the 4th. Dates are a placeholder — confirm. PDX → YYZ + drive. May collide with Noor's July Europe trip." }
+      { name: "Ontario Cottage", start: "2026-07-06", end: "2026-07-12", tentative: true, note: "Cottage country in Canada, right after the 4th. Both joining. PDX → YYZ + drive. Dates are a placeholder, confirm." }
     ],
     events: []
   }
@@ -147,7 +155,7 @@ const moves = [
 
 const solos = [
   { name: "Brazil", start: "2026-06-08", end: "2026-06-13", tentative: true, note: "Possibly happening. Peels off mid-Sierras, regroups with Jeff after Jun 13." },
-  { name: "Europe", start: "2026-07-01", end: "2026-07-31", tentative: true, note: "From the citizenship tracker, status \"likely\". Destination TBD." },
+  { name: "Europe", start: "2026-07-01", end: "2026-07-31", tentative: true, note: "From the citizenship tracker, status \"likely\". Destination TBD. Noor pops back ~Jul 5 to join the Ontario Cottage trip." },
   { name: "Africa", start: "2026-10-01", end: "2026-10-31", tentative: true, note: "From the citizenship tracker, status \"likely\". Destination TBD." }
 ];
 
@@ -186,6 +194,11 @@ function bcStatus(bc) {
   return "past";
 }
 
+function renderLinks(links, cls) {
+  if (!links || !links.length) return "";
+  return `<div class="${cls}">${links.map(l => `<a href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`).join("")}</div>`;
+}
+
 function row(item) {
   return `
     <div class="row">
@@ -193,6 +206,7 @@ function row(item) {
       <div class="row-body">
         <div class="row-title">${item.name}${item.tentative ? ` <span class="tentative">tentative</span>` : ""}</div>
         ${item.note ? `<div class="row-note">${item.note}</div>` : ""}
+        ${renderLinks(item.links, "row-links")}
       </div>
     </div>`;
 }
@@ -233,6 +247,7 @@ function renderBasecamp(bc) {
       <div class="bc-when">${fmtRange(bc.start, bc.end)}</div>
       <div class="bc-where">${bc.where}</div>
       ${bc.note ? `<div class="bc-note">${bc.note}</div>` : ""}
+      ${renderLinks(bc.links, "bc-links")}
       ${countdown}
       ${inside}
     </section>`;
