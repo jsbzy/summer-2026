@@ -75,10 +75,20 @@
   .bc-links a:hover { background: rgba(0,113,227,0.14); }
   .bc-links a::after { content: "↗"; font-size: 11px; opacity: 0.7; }
 
-  /* Move */
-  .move { padding: 28px 0; border-top: 1px solid var(--divider); }
-  .move .label { margin-bottom: 14px; display: block; }
-  .move-route { font-size: 17px; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 14px; color: var(--ink); }
+  /* In-transit */
+  .transit { padding: 28px 0; border-top: 1px solid var(--divider); }
+  .transit .label { margin-bottom: 14px; display: block; }
+  .transit-route { font-size: 17px; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 14px; color: var(--ink); }
+
+  /* Lodging chip */
+  .lodging { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 999px; background: rgba(29,29,31,0.06); color: var(--ink-2); font-weight: 500; vertical-align: middle; }
+  .lodging.airbnb { background: rgba(255, 56, 92, 0.10); color: #b8264a; }
+  .lodging.tope { background: rgba(180, 83, 9, 0.10); color: #92400e; }
+  .lodging.festival { background: rgba(147, 51, 234, 0.10); color: #6b21a8; }
+  .lodging.cottage { background: rgba(22, 163, 74, 0.10); color: #15803d; }
+  .lodging.hotel { background: rgba(0, 113, 227, 0.10); color: #0855a3; }
+  .lodging.friends { background: rgba(234, 88, 12, 0.10); color: #9a3412; }
+  .bc-lodging { margin-bottom: 8px; }
 
   /* Solo */
   .solo { padding: 36px 0; border-top: 1px solid var(--divider); }
@@ -116,13 +126,14 @@ const basecamps = [
     start: "2026-05-10",
     end: "2026-06-03",
     where: "Airbnb on Olympic Rd",
+    lodging: { type: "airbnb", label: "Airbnb" },
     note: "Tope, Banjo, Bakso. Pool guy: Cameron.",
     visitors: [
-      { name: "Sarah", start: "2026-05-16", end: "2026-05-20", note: "Flies into PSP, stays at the Airbnb, out via PSP morning of May 20." }
+      { name: "Sarah", start: "2026-05-16", end: "2026-05-20", note: "Flies into PSP, stays at the Airbnb, out via PSP morning of May 20.", lodging: { type: "airbnb", label: "Same Airbnb" } }
     ],
     trips: [
       { name: "Noor — Packard talk", start: "2026-05-20", end: "2026-05-20", tentative: false, note: "Day trip, Los Altos. PSP → SJC." },
-      { name: "Lightning in a Bottle", start: "2026-05-20", end: "2026-05-24", tentative: false, note: "Buena Vista Lake. Dogs boarded near JT. Exit Mon May 25." }
+      { name: "Lightning in a Bottle", start: "2026-05-20", end: "2026-05-24", tentative: false, note: "Buena Vista Lake. Dogs boarded near JT. Exit Mon May 25.", lodging: { type: "festival", label: "Festival camping" } }
     ],
     events: []
   },
@@ -131,24 +142,25 @@ const basecamps = [
     start: "2026-06-13",
     end: null,
     where: "Lodging TBD",
+    lodging: { type: "default", label: "Lodging TBD" },
     note: "Arrival mid-June. Length open.",
     visitors: [],
     trips: [
-      { name: "Camp Cedar Creek", start: "2026-07-04", end: "2026-07-04", tentative: true, note: "4th of July campout. Location TBD." },
-      { name: "Ontario Cottage", start: "2026-07-06", end: "2026-07-12", tentative: true, note: "Cottage country in Canada, right after the 4th. Both joining. PDX → YYZ + drive. Dates are a placeholder, confirm." }
+      { name: "Camp Cedar Creek", start: "2026-07-04", end: "2026-07-04", tentative: true, note: "4th of July campout. Location TBD.", lodging: { type: "tope", label: "Tope camping" } },
+      { name: "Ontario Cottage", start: "2026-07-06", end: "2026-07-12", tentative: true, note: "Cottage country in Canada, right after the 4th. Both joining. PDX → YYZ + drive. Dates are a placeholder, confirm.", lodging: { type: "cottage", label: "Cottage rental" } }
     ],
     events: []
   }
 ];
 
-const moves = [
+const transit = [
   {
     route: "Joshua Tree → Portland",
     start: "2026-06-04",
     end: "2026-06-12",
     stops: [
-      { name: "Kift Reunion", start: "2026-06-05", end: "2026-06-08", tentative: true, note: "Location TBD." },
-      { name: "Sierras (Tope drive)", start: "2026-06-08", end: "2026-06-12", tentative: false, note: "Route TBD: east 395 (Mammoth, Alabama Hills, Mono Lake) or west (Yosemite east, Sonora Pass)." }
+      { name: "Kift Reunion", start: "2026-06-05", end: "2026-06-08", tentative: true, note: "Location TBD.", lodging: { type: "tope", label: "Tope camping" } },
+      { name: "Sierras (Tope drive)", start: "2026-06-08", end: "2026-06-12", tentative: false, note: "Route TBD: east 395 (Mammoth, Alabama Hills, Mono Lake) or west (Yosemite east, Sonora Pass).", lodging: { type: "tope", label: "Tope camping" } }
     ]
   }
 ];
@@ -199,12 +211,17 @@ function renderLinks(links, cls) {
   return `<div class="${cls}">${links.map(l => `<a href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`).join("")}</div>`;
 }
 
+function lodgingChip(l) {
+  if (!l) return "";
+  return `<span class="lodging ${l.type}">${l.label}</span>`;
+}
+
 function row(item) {
   return `
     <div class="row">
       <div class="row-when">${fmtShortRange(item.start, item.end)}</div>
       <div class="row-body">
-        <div class="row-title">${item.name}${item.tentative ? ` <span class="tentative">tentative</span>` : ""}</div>
+        <div class="row-title">${item.name}${item.tentative ? ` <span class="tentative">tentative</span>` : ""} ${lodgingChip(item.lodging)}</div>
         ${item.note ? `<div class="row-note">${item.note}</div>` : ""}
         ${renderLinks(item.links, "row-links")}
       </div>
@@ -246,6 +263,7 @@ function renderBasecamp(bc) {
       <h2 class="bc-name">${bc.name}</h2>
       <div class="bc-when">${fmtRange(bc.start, bc.end)}</div>
       <div class="bc-where">${bc.where}</div>
+      ${bc.lodging ? `<div class="bc-lodging">${lodgingChip(bc.lodging)}</div>` : ""}
       ${bc.note ? `<div class="bc-note">${bc.note}</div>` : ""}
       ${renderLinks(bc.links, "bc-links")}
       ${countdown}
@@ -253,11 +271,11 @@ function renderBasecamp(bc) {
     </section>`;
 }
 
-function renderMove(mv) {
+function renderTransit(mv) {
   return `
-    <section class="move">
-      <div class="label">Move &middot; ${fmtRange(mv.start, mv.end)}</div>
-      <div class="move-route">${mv.route}</div>
+    <section class="transit">
+      <div class="label">In-transit &middot; ${fmtRange(mv.start, mv.end)}</div>
+      <div class="transit-route">${mv.route}</div>
       ${mv.stops.map(row).join("")}
     </section>`;
 }
@@ -274,7 +292,7 @@ function renderSolo() {
 const main = document.getElementById("main");
 main.innerHTML = `
   ${renderBasecamp(basecamps[0])}
-  ${moves.map(renderMove).join("")}
+  ${transit.map(renderTransit).join("")}
   ${renderBasecamp(basecamps[1])}
   ${renderSolo()}
 `;
