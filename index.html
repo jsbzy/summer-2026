@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Jeff + Noor — Summer/Fall 2026</title>
+<style>
+  :root {
+    --bg: #faf8f5;
+    --ink: #1a1a1a;
+    --muted: #6b6863;
+    --line: #e7e3dc;
+    --base: #2563eb;
+    --event: #16a34a;
+    --travel: #ea580c;
+    --festival: #9333ea;
+    --tentative: #94a3b8;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 32px 20px 80px; }
+  header { margin-bottom: 32px; }
+  h1 { font-size: 28px; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .subtitle { color: var(--muted); font-size: 14px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; margin: 16px 0 28px; font-size: 13px; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); }
+  .legend i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+  .months { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 40px; }
+  .month { background: white; border: 1px solid var(--line); border-radius: 10px; padding: 14px; }
+  .month h3 { margin: 0 0 8px; font-size: 14px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+  .grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; font-size: 11px; }
+  .dow { text-align: center; color: var(--muted); padding: 4px 0; font-weight: 500; }
+  .day { aspect-ratio: 1; border-radius: 4px; padding: 3px 4px; font-size: 10px; color: var(--muted); position: relative; background: #f5f2ec; }
+  .day.empty { background: transparent; }
+  .day.has-event { color: white; font-weight: 600; }
+  .day.base { background: var(--base); }
+  .day.event { background: var(--event); }
+  .day.travel { background: var(--travel); }
+  .day.festival { background: var(--festival); }
+  .day.tentative { background: var(--tentative); }
+  .day .dot { position: absolute; bottom: 3px; right: 3px; width: 4px; height: 4px; border-radius: 50%; }
+  .timeline { background: white; border: 1px solid var(--line); border-radius: 10px; padding: 24px; }
+  .timeline h2 { margin: 0 0 18px; font-size: 18px; }
+  .item { display: grid; grid-template-columns: 130px 1fr; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .item:last-child { border-bottom: none; }
+  .item .when { color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
+  .item .what { font-weight: 500; }
+  .item .what .tag { display: inline-block; font-size: 10px; padding: 2px 6px; border-radius: 3px; margin-right: 8px; color: white; vertical-align: middle; text-transform: uppercase; letter-spacing: 0.05em; }
+  .item .tag.base { background: var(--base); }
+  .item .tag.event { background: var(--event); }
+  .item .tag.travel { background: var(--travel); }
+  .item .tag.festival { background: var(--festival); }
+  .item .tag.tentative { background: var(--tentative); }
+  .item .note { color: var(--muted); font-size: 13px; margin-top: 4px; }
+  footer { color: var(--muted); font-size: 12px; margin-top: 32px; text-align: center; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Jeff + Noor &mdash; Summer/Fall 2026</h1>
+  <div class="subtitle">Snapshot as of 2026-05-10. Some legs still tentative.</div>
+  <div class="legend">
+    <span><i style="background:var(--base)"></i> Base / lodging</span>
+    <span><i style="background:var(--festival)"></i> Festival</span>
+    <span><i style="background:var(--event)"></i> Event / fixed</span>
+    <span><i style="background:var(--travel)"></i> Travel / flight</span>
+    <span><i style="background:var(--tentative)"></i> Tentative</span>
+  </div>
+</header>
+
+<div class="months" id="months"></div>
+
+<section class="timeline">
+  <h2>Timeline</h2>
+  <div class="item"><div class="when">May 10 &ndash; Jun 3</div><div class="what"><span class="tag base">Base</span>Joshua Tree, Airbnb on Olympic Rd<div class="note">Tope, Banjo, Bakso. Out by Jun 3.</div></div></div>
+  <div class="item"><div class="when">May 16 &ndash; 20</div><div class="what"><span class="tag event">Guest</span>Sarah visits<div class="note">Flies into PSP, crashes at the JT Airbnb, out via PSP morning of May 20.</div></div></div>
+  <div class="item"><div class="when">May 20</div><div class="what"><span class="tag event">Talk</span>Noor speaking at the Packard Foundation, Los Altos<div class="note">PSP &rarr; SJC. Possibly continues to BFL same evening to meet Jeff at LIB.</div></div></div>
+  <div class="item"><div class="when">May 20 &ndash; 24</div><div class="what"><span class="tag festival">Festival</span>Lightning in a Bottle, Buena Vista Lake<div class="note">Memorial Day weekend. Banjo + Bakso boarded (location TBD). Exit by Mon May 25.</div></div></div>
+  <div class="item"><div class="when">May 25 &ndash; Jun 3</div><div class="what"><span class="tag base">Base</span>Back at the JT Airbnb<div class="note">Wind-down before the next leg.</div></div></div>
+  <div class="item"><div class="when">Jun 5 &ndash; 8</div><div class="what"><span class="tag tentative">Tentative</span>Kift Reunion<div class="note">Location TBD. Routing JT &rarr; reunion &rarr; Sierras.</div></div></div>
+  <div class="item"><div class="when">Jun 8 &ndash; 12</div><div class="what"><span class="tag travel">Drive</span>Sierras leg in Tope<div class="note">Route TBD: east 395 (Mammoth, Alabama Hills, Mono Lake) vs west (Yosemite east, Sonora Pass). Wanderpins along the way.</div></div></div>
+  <div class="item"><div class="when">Jun 8 &ndash; 13</div><div class="what"><span class="tag tentative">Maybe</span>Noor to Brazil<div class="note">Possibly happening. Peels off mid-Sierras leg, regroups with Jeff Jun 13+ en route to Portland.</div></div></div>
+  <div class="item"><div class="when">~Jun 13 &ndash; ?</div><div class="what"><span class="tag base">Base</span>Portland<div class="note">Arrival mid-June. Length and base TBD (Airbnb, friends, Tope-only).</div></div></div>
+  <div class="item"><div class="when">Jul 1 &ndash; 31</div><div class="what"><span class="tag tentative">Likely</span>Noor to Europe<div class="note">From the citizenship tracker, status &ldquo;likely&rdquo;. Destination TBD.</div></div></div>
+  <div class="item"><div class="when">Oct 1 &ndash; 31</div><div class="what"><span class="tag tentative">Likely</span>Noor to Africa<div class="note">From the citizenship tracker, status &ldquo;likely&rdquo;. Destination TBD.</div></div></div>
+</section>
+
+<footer>Generated by Wanda. Ping me to update.</footer>
+</div>
+
+<script>
+const events = [
+  { start: "2026-05-10", end: "2026-06-03", type: "base" },
+  { start: "2026-05-16", end: "2026-05-20", type: "event" },
+  { start: "2026-05-20", end: "2026-05-20", type: "event" },
+  { start: "2026-05-20", end: "2026-05-24", type: "festival" },
+  { start: "2026-06-05", end: "2026-06-08", type: "tentative" },
+  { start: "2026-06-08", end: "2026-06-12", type: "travel" },
+  { start: "2026-06-08", end: "2026-06-13", type: "tentative" },
+  { start: "2026-06-13", end: "2026-06-30", type: "base" },
+  { start: "2026-07-01", end: "2026-07-31", type: "tentative" },
+  { start: "2026-10-01", end: "2026-10-31", type: "tentative" },
+];
+const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const dows = ["S","M","T","W","T","F","S"];
+const priority = { base: 1, event: 4, festival: 4, travel: 3, tentative: 2 };
+
+function dayType(year, month, day) {
+  const d = new Date(Date.UTC(year, month, day));
+  let best = null;
+  for (const ev of events) {
+    const s = new Date(ev.start + "T00:00:00Z");
+    const e = new Date(ev.end + "T00:00:00Z");
+    if (d >= s && d <= e) {
+      if (!best || priority[ev.type] > priority[best.type]) best = ev;
+    }
+  }
+  return best ? best.type : null;
+}
+
+function buildMonth(year, month) {
+  const first = new Date(Date.UTC(year, month, 1));
+  const startDow = first.getUTCDay();
+  const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+  let html = `<div class="month"><h3>${monthNames[month]} ${year}</h3><div class="grid">`;
+  for (const d of dows) html += `<div class="dow">${d}</div>`;
+  for (let i = 0; i < startDow; i++) html += `<div class="day empty"></div>`;
+  for (let day = 1; day <= daysInMonth; day++) {
+    const t = dayType(year, month, day);
+    const cls = t ? `day has-event ${t}` : "day";
+    html += `<div class="${cls}">${day}</div>`;
+  }
+  html += `</div></div>`;
+  return html;
+}
+
+const target = document.getElementById("months");
+for (let m = 4; m <= 11; m++) target.innerHTML += buildMonth(2026, m);
+</script>
+</body>
+</html>
