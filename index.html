@@ -149,6 +149,28 @@ const basecamps = [
     ]
   },
   {
+    name: "West Linn (Mark's)",
+    start: "2026-06-04",
+    end: "2026-06-05",
+    where: "Jeff's brother Mark's house",
+    lodging: { type: "default", label: "Mark's place" },
+    note: "Brief stop after the JT drive, before flying to Brazil.",
+    visitors: [],
+    trips: [],
+    events: []
+  },
+  {
+    name: "West Linn (Mark's, post-Brazil)",
+    start: "2026-06-13",
+    end: "2026-06-15",
+    where: "Mark's house again",
+    lodging: { type: "default", label: "Mark's place" },
+    note: "3-day buffer between PDX landing 6/13 and Barn ADU lease start 6/16.",
+    visitors: [],
+    trips: [],
+    events: []
+  },
+  {
     name: "Portland",
     start: "2026-06-16",
     end: "2026-09-16",
@@ -164,9 +186,18 @@ const basecamps = [
   }
 ];
 
-// No drive-transit on the way to Portland — they're flying to/from Brazil
-// directly and landing PDX on the return.
-const transit = [];
+const transit = [
+  {
+    route: "Joshua Tree → West Linn (Portland metro)",
+    start: "2026-06-02",
+    end: "2026-06-04",
+    stops: [
+      { name: "Depart JT (Tue afternoon)", start: "2026-06-02", end: "2026-06-02", tentative: false, note: "Drive begins, overnight stop TBD.", lodging: { type: "tope", label: "Tope camping" } },
+      { name: "Drive day 2 (Wed)",         start: "2026-06-03", end: "2026-06-03", tentative: false, note: "Second overnight stop TBD.", lodging: { type: "tope", label: "Tope camping" } },
+      { name: "Arrive Mark's (Thu)",       start: "2026-06-04", end: "2026-06-04", tentative: false, note: "Roll into West Linn." }
+    ]
+  }
+];
 
 // Jeff + Noor traveling together (one entry per couple trip).
 const couples = [
@@ -325,8 +356,11 @@ function renderCouples() {
 const main = document.getElementById("main");
 main.innerHTML = `
   ${renderBasecamp(basecamps[0])}
-  ${renderCouples()}
+  ${transit.map(renderTransit).join("")}
   ${renderBasecamp(basecamps[1])}
+  ${renderCouples()}
+  ${renderBasecamp(basecamps[2])}
+  ${renderBasecamp(basecamps[3])}
   ${renderSolo()}
 `;
 </script>
