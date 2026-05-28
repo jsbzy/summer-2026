@@ -159,28 +159,6 @@ const basecamps = [
     ]
   },
   {
-    name: "West Linn (Mark's)",
-    start: "2026-06-04",
-    end: "2026-06-05",
-    where: "Jeff's brother Mark's house",
-    lodging: { type: "default", label: "Mark's place" },
-    note: "Brief stop after the JT drive, before flying to Brazil.",
-    visitors: [],
-    trips: [],
-    events: []
-  },
-  {
-    name: "West Linn (Mark's, post-Brazil)",
-    start: "2026-06-13",
-    end: "2026-06-15",
-    where: "Mark's house again",
-    lodging: { type: "default", label: "Mark's place" },
-    note: "3-day buffer between PDX landing 6/13 and Barn ADU lease start 6/16.",
-    visitors: [],
-    trips: [],
-    events: []
-  },
-  {
     name: "Portland",
     start: "2026-06-16",
     end: "2026-09-16",
@@ -198,13 +176,25 @@ const basecamps = [
 
 const transit = [
   {
-    route: "Joshua Tree → West Linn (Portland metro)",
+    route: "Joshua Tree → Brazil (via Mark's in West Linn)",
     start: "2026-06-02",
-    end: "2026-06-04",
+    end: "2026-06-06",
     stops: [
-      { name: "Depart JT (Tue afternoon)", start: "2026-06-02", end: "2026-06-02", tentative: false, note: "Drive begins, overnight stop TBD.", lodging: { type: "tope", label: "Tope camping" } },
-      { name: "Drive day 2 (Wed)",         start: "2026-06-03", end: "2026-06-03", tentative: false, note: "Second overnight stop TBD.", lodging: { type: "tope", label: "Tope camping" } },
-      { name: "Arrive Mark's (Thu)",       start: "2026-06-04", end: "2026-06-04", tentative: false, note: "Roll into West Linn." }
+      { name: "Depart JT (Tue afternoon)",         start: "2026-06-02", end: "2026-06-02", tentative: false, note: "Drive begins. First overnight stop TBD.", lodging: { type: "tope", label: "Tope camping" } },
+      { name: "Drive day 2 (Wed)",                 start: "2026-06-03", end: "2026-06-03", tentative: false, note: "Second overnight stop TBD.", lodging: { type: "tope", label: "Tope camping" } },
+      { name: "Arrive Mark's in West Linn (Thu)",  start: "2026-06-04", end: "2026-06-04", tentative: false, note: "Roll into the Portland metro.", lodging: { type: "friends", label: "Mark's place" } },
+      { name: "At Mark's (Fri)",                   start: "2026-06-05", end: "2026-06-05", tentative: false, note: "Drop pups at Lauren Nicholl's; pack for Brazil.", lodging: { type: "friends", label: "Mark's place" } },
+      { name: "Fly PDX → Brazil (Sat)",            start: "2026-06-06", end: "2026-06-06", tentative: false, note: "UA 2359 PDX→EWR (10:33a), UA 149 EWR→GRU (8:30p). PNR G6JTG4." }
+    ]
+  },
+  {
+    route: "Brazil → Portland (Barn ADU)",
+    start: "2026-06-13",
+    end: "2026-06-16",
+    stops: [
+      { name: "Land PDX (Sat)",                    start: "2026-06-13", end: "2026-06-13", tentative: false, note: "UA 1994 lands 11:38a. Pickup pups at Lauren's, head to Mark's." },
+      { name: "At Mark's (Sun + Mon)",             start: "2026-06-14", end: "2026-06-15", tentative: false, note: "3-day buffer before Barn ADU lease starts.", lodging: { type: "friends", label: "Mark's place" } },
+      { name: "Move into Barn ADU (Tue 6/16)",     start: "2026-06-16", end: "2026-06-16", tentative: false, note: "Lease starts. Tope build resumes in PDX." }
     ]
   }
 ];
@@ -216,7 +206,7 @@ const couples = [
     start: "2026-06-06",
     end: "2026-06-13",
     tentative: false,
-    note: "Out PDX → EWR → GRU on UA (PNR G6JTG4), then LATAM GRU → IMP. Return same routing via ORD. Pups boarded with Lauren Nicholl 6/5-6/13."
+    note: "Noor work trip, Jeff tagging along. Out PDX → EWR → GRU on UA (PNR G6JTG4), then LATAM GRU → IMP. Return same routing via ORD. Pups boarded with Lauren Nicholl 6/5-6/13."
   }
 ];
 
@@ -375,7 +365,7 @@ function renderCouples() {
   return `
     <section class="solo">
       <div class="label">Together &middot; Jeff + Noor</div>
-      <h3>Couple trips</h3>
+      <h3>Joint trips</h3>
       ${couples.map(row).join("")}
     </section>`;
 }
@@ -391,11 +381,10 @@ function renderCouples() {
 const main = document.getElementById("main");
 main.innerHTML = `
   ${renderBasecamp(basecamps[0])}
-  ${transit.map(renderTransit).join("")}
-  ${renderBasecamp(basecamps[1])}
+  ${renderTransit(transit[0])}
   ${renderCouples()}
-  ${renderBasecamp(basecamps[2])}
-  ${renderBasecamp(basecamps[3])}
+  ${renderTransit(transit[1])}
+  ${renderBasecamp(basecamps[1])}
   ${renderSolo()}
 `;
 </script>
