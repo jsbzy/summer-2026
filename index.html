@@ -66,7 +66,17 @@
   .row-body { flex: 1; min-width: 0; }
   .row-title { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.35; }
   .row-title .tentative { font-size: 11px; font-weight: 500; color: var(--ink-3); margin-left: 6px; vertical-align: middle; text-transform: lowercase; letter-spacing: 0; }
+  .row-title .done { font-size: 10px; font-weight: 600; color: var(--ink-3); margin-left: 8px; vertical-align: middle; text-transform: uppercase; letter-spacing: 0.08em; padding: 2px 7px; border-radius: 3px; background: rgba(29,29,31,0.06); }
   .row-note { font-size: 13px; color: var(--ink-3); margin-top: 4px; line-height: 1.45; }
+  .row.past { opacity: 0.48; }
+  .row.past .row-title { font-weight: 500; }
+
+  /* Collapsible "done at this base" archive */
+  details.archive { margin-top: 22px; }
+  details.archive > summary { font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-3); font-weight: 600; cursor: pointer; padding: 6px 0; list-style: none; user-select: none; }
+  details.archive > summary::-webkit-details-marker { display: none; }
+  details.archive > summary::before { content: "›"; display: inline-block; margin-right: 8px; transform: rotate(0deg); transition: transform 120ms ease; font-weight: 400; }
+  details.archive[open] > summary::before { transform: rotate(90deg); }
   .row-links { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 6px; }
   .row-links a { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--accent); text-decoration: none; padding: 3px 8px; border-radius: 6px; background: rgba(0,113,227,0.08); }
   .row-links a:hover { background: rgba(0,113,227,0.14); }
@@ -262,12 +272,20 @@ function lodgingChip(l) {
   return `<span class="lodging ${l.type}">${l.label}</span>`;
 }
 
-function row(item) {
+function isItemPast(item) {
+  if (!item.end) return false;
+  return parseUTC(item.end) < today;
+}
+
+function row(item, opts) {
+  const past = isItemPast(item);
+  const cls = past ? "row past" : "row";
+  const doneBadge = past ? ` <span class="done">done</span>` : "";
   return `
-    <div class="row">
+    <div class="${cls}">
       <div class="row-when">${fmtShortRange(item.start, item.end)}</div>
       <div class="row-body">
-        <div class="row-title">${item.name}${item.tentative ? ` <span class="tentative">tentative</span>` : ""} ${lodgingChip(item.lodging)}</div>
+        <div class="row-title">${item.name}${item.tentative ? ` <span class="tentative">tentative</span>` : ""}${doneBadge} ${lodgingChip(item.lodging)}</div>
         ${item.note ? `<div class="row-note">${item.note}</div>` : ""}
         ${renderLinks(item.links, "row-links")}
       </div>
@@ -292,15 +310,32 @@ function renderBasecamp(bc) {
     statusLabel = `<div class="bc-status"><span class="dot"></span><span class="label">Past basecamp</span></div>`;
   }
 
+  // Split each sub-collection into upcoming (or active) vs past, so past
+  // items can be collapsed into the archive at the bottom of the card.
+  const splitItems = (arr) => {
+    const upcoming = [], past = [];
+    arr.forEach(it => (isItemPast(it) ? past : upcoming).push(it));
+    return { upcoming, past };
+  };
+  const visitorsSplit = splitItems(bc.visitors);
+  const tripsSplit    = splitItems(bc.trips);
+  const eventsSplit   = splitItems(bc.events);
+
   let inside = "";
-  if (bc.visitors.length) {
-    inside += `<div class="bc-sec"><div class="label">Visitors</div>${bc.visitors.map(row).join("")}</div>`;
+  if (visitorsSplit.upcoming.length) {
+    inside += `<div class="bc-sec"><div class="label">Visitors</div>${visitorsSplit.upcoming.map(row).join("")}</div>`;
   }
-  if (bc.trips.length) {
-    inside += `<div class="bc-sec"><div class="label">Trips from base</div>${bc.trips.map(row).join("")}</div>`;
+  if (tripsSplit.upcoming.length) {
+    inside += `<div class="bc-sec"><div class="label">Trips from base</div>${tripsSplit.upcoming.map(row).join("")}</div>`;
   }
-  if (bc.events.length) {
-    inside += `<div class="bc-sec"><div class="label">Local events</div>${bc.events.map(row).join("")}</div>`;
+  if (eventsSplit.upcoming.length) {
+    inside += `<div class="bc-sec"><div class="label">Local events</div>${eventsSplit.upcoming.map(row).join("")}</div>`;
+  }
+
+  const archive = [...visitorsSplit.past, ...tripsSplit.past, ...eventsSplit.past]
+    .sort((a, b) => parseUTC(a.start) - parseUTC(b.start));
+  if (archive.length) {
+    inside += `<details class="archive"><summary>Done at this base · ${archive.length}</summary>${archive.map(row).join("")}</details>`;
   }
 
   return `
