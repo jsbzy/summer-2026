@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="data-snapshot" content="2026-05-28">
 <title>Jeff + Noor — Summer/Fall 2026</title>
 <style>
   :root {
@@ -107,7 +108,7 @@
 <div class="wrap">
 <header>
   <h1>Summer / Fall 2026</h1>
-  <div class="subtitle">Jeff + Noor. Snapshot as of May 10.</div>
+  <div class="subtitle" id="subtitle">Jeff + Noor.</div>
 </header>
 
 <main id="main"></main>
@@ -116,9 +117,17 @@
 </div>
 
 <script>
-const TODAY = "2026-05-10";
+// TODAY is computed at page load so the countdown math is always current.
+// Use the viewer's local date (PT-friendly: the audience is PT-anchored).
+const _now = new Date();
+const TODAY = `${_now.getFullYear()}-${String(_now.getMonth() + 1).padStart(2, "0")}-${String(_now.getDate()).padStart(2, "0")}`;
 const today = new Date(TODAY + "T00:00:00Z");
 const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const fullMonthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+// Snapshot stamp — driven by the page's data-snapshot meta below so future
+// rewrites can bump it deliberately. Defaults to today if not set.
+const SNAPSHOT_STAMP_YMD = (document.querySelector('meta[name="data-snapshot"]') || {}).content || TODAY;
 
 const basecamps = [
   {
@@ -141,36 +150,40 @@ const basecamps = [
   },
   {
     name: "Portland",
-    start: "2026-06-13",
-    end: null,
-    where: "Lodging TBD",
-    lodging: { type: "default", label: "Lodging TBD" },
-    note: "Arrival mid-June. Length open.",
+    start: "2026-06-16",
+    end: "2026-09-16",
+    where: "Barn ADU, 13016 SE Ramona Unit B",
+    lodging: { type: "airbnb", label: "Barn ADU lease" },
+    note: "Lease 6/16 – 9/16. Tope build continues here.",
     visitors: [],
     trips: [
-      { name: "Camp Cedar Creek", start: "2026-07-04", end: "2026-07-04", tentative: true, note: "4th of July campout. Location TBD.", lodging: { type: "tope", label: "Tope camping" } },
+      { name: "Camp Cedar Creek (4th)", start: "2026-07-04", end: "2026-07-04", tentative: true, note: "4th of July campout. Location TBD.", lodging: { type: "tope", label: "Tope camping" } },
       { name: "Ontario Cottage", start: "2026-07-06", end: "2026-07-12", tentative: true, note: "Cottage country in Canada, right after the 4th. Both joining. PDX → YYZ + drive. Dates are a placeholder, confirm.", lodging: { type: "cottage", label: "Cottage rental" } }
     ],
     events: []
   }
 ];
 
-const transit = [
+// No drive-transit on the way to Portland — they're flying to/from Brazil
+// directly and landing PDX on the return.
+const transit = [];
+
+// Jeff + Noor traveling together (one entry per couple trip).
+const couples = [
   {
-    route: "Joshua Tree → Portland",
-    start: "2026-06-04",
-    end: "2026-06-12",
-    stops: [
-      { name: "Kift Reunion", start: "2026-06-05", end: "2026-06-08", tentative: true, note: "Location TBD.", lodging: { type: "tope", label: "Tope camping" } },
-      { name: "Sierras (Tope drive)", start: "2026-06-08", end: "2026-06-12", tentative: false, note: "Route TBD: east 395 (Mammoth, Alabama Hills, Mono Lake) or west (Yosemite east, Sonora Pass).", lodging: { type: "tope", label: "Tope camping" } }
-    ]
+    name: "Brazil — Imperatriz (Maranhão)",
+    start: "2026-06-06",
+    end: "2026-06-13",
+    tentative: false,
+    note: "Out PDX → EWR → GRU on UA (PNR G6JTG4), then LATAM GRU → IMP. Return same routing via ORD. Pups boarded with Lauren Nicholl 6/5-6/13."
   }
 ];
 
+// Noor solo trips (passport-stamp legs from the citizenship tracker).
 const solos = [
-  { name: "Brazil", start: "2026-06-08", end: "2026-06-13", tentative: true, note: "Possibly happening. Peels off mid-Sierras, regroups with Jeff after Jun 13." },
-  { name: "Europe", start: "2026-07-01", end: "2026-07-31", tentative: true, note: "From the citizenship tracker, status \"likely\". Destination TBD. Noor pops back ~Jul 5 to join the Ontario Cottage trip." },
-  { name: "Africa", start: "2026-10-01", end: "2026-10-31", tentative: true, note: "From the citizenship tracker, status \"likely\". Destination TBD." }
+  { name: "Indonesia", start: "2026-06-15", end: "2026-07-01", tentative: true, note: "From the citizenship tracker, status \"likely\". Lands PDX 6/13 from Brazil, turns around 6/15." },
+  { name: "Italy",     start: "2026-07-28", end: "2026-08-01", tentative: true, note: "From the citizenship tracker, status \"likely\"." },
+  { name: "Africa",    start: "2026-10-01", end: "2026-10-31", tentative: true, note: "From the citizenship tracker, status \"likely\". Destination TBD." }
 ];
 
 function parseUTC(s) { return new Date(s + "T00:00:00Z"); }
@@ -291,10 +304,28 @@ function renderSolo() {
     </section>`;
 }
 
+function renderCouples() {
+  if (!couples.length) return "";
+  return `
+    <section class="solo">
+      <div class="label">Together &middot; Jeff + Noor</div>
+      <h3>Couple trips</h3>
+      ${couples.map(row).join("")}
+    </section>`;
+}
+
+// Snapshot date stamp in the header.
+(function setSubtitle() {
+  const el = document.getElementById("subtitle");
+  if (!el) return;
+  const [y, m, d] = SNAPSHOT_STAMP_YMD.split("-").map(Number);
+  el.textContent = `Jeff + Noor. Snapshot as of ${fullMonthNames[m - 1]} ${d}, ${y}.`;
+})();
+
 const main = document.getElementById("main");
 main.innerHTML = `
   ${renderBasecamp(basecamps[0])}
-  ${transit.map(renderTransit).join("")}
+  ${renderCouples()}
   ${renderBasecamp(basecamps[1])}
   ${renderSolo()}
 `;
