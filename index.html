@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="data-snapshot" content="2026-05-28">
+<meta name="data-snapshot" content="2026-06-07">
 <title>Jeff + Noor — Summer/Fall 2026</title>
 <style>
   :root {
@@ -105,6 +105,26 @@
   .solo { padding: 36px 0; border-top: 1px solid var(--divider); }
   .solo .label { margin-bottom: 14px; display: block; }
   .solo h3 { font-size: 24px; font-weight: 700; letter-spacing: -0.018em; margin: 0 0 18px; }
+
+  /* Brazil trip log — timed events */
+  .briazil { padding: 28px 22px; border-radius: 18px; margin: 18px 0; background: linear-gradient(180deg, rgba(255, 196, 0, 0.07) 0%, rgba(0, 168, 89, 0.04) 100%); box-shadow: inset 0 0 0 1px rgba(0, 113, 227, 0.10); }
+  .briazil .label { margin-bottom: 14px; display: block; }
+  .briazil h3 { font-size: 22px; font-weight: 700; letter-spacing: -0.018em; margin: 0 0 4px; }
+  .briazil .briazil-sub { font-size: 13px; color: var(--ink-3); margin-bottom: 18px; font-variant-numeric: tabular-nums; }
+  .ev { display: flex; gap: 12px; padding: 10px 0; border-top: 1px solid var(--divider); align-items: flex-start; }
+  .ev:last-child { border-bottom: 1px solid var(--divider); }
+  .ev-when { flex: 0 0 110px; font-size: 12px; color: var(--ink-3); font-variant-numeric: tabular-nums; line-height: 1.35; padding-top: 2px; }
+  .ev-body { flex: 1; min-width: 0; }
+  .ev-title { font-size: 14px; font-weight: 600; letter-spacing: -0.005em; line-height: 1.35; }
+  .ev-detail { font-size: 12px; color: var(--ink-3); margin-top: 3px; line-height: 1.45; }
+  .ev.done { opacity: 0.5; }
+  .ev.done .ev-title { font-weight: 500; }
+  .ev.now { background: rgba(0, 113, 227, 0.06); border-radius: 8px; padding: 10px 12px; margin: 4px 0; border-top: 0; }
+  .ev.now + .ev { border-top: 1px solid var(--divider); }
+  .ev .status-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
+  .ev.done .status-dot { background: rgba(29,29,31,0.3); }
+  .ev.now .status-dot { background: var(--accent); animation: pulse 1.8s infinite ease-in-out; }
+  .ev.upcoming .status-dot { background: rgba(0,113,227,0.4); }
 
   footer { color: var(--ink-3); font-size: 12px; margin-top: 56px; text-align: center; }
 
@@ -208,6 +228,73 @@ const couples = [
     tentative: false,
     note: "Noor work trip, Jeff tagging along. Out PDX → EWR → GRU on UA (PNR G6JTG4), then LATAM GRU → IMP. Return same routing via ORD. Pups boarded with Lauren Nicholl 6/5-6/13."
   }
+];
+
+// Brazil trip — timed log. Hand-maintained running record of transfers and key
+// moments. Times use ISO 8601 with timezone offset so the page can sort and
+// compute done/now/upcoming honestly. tzLabel is what's shown to the reader.
+const brazilTimeline = [
+  // Saturday June 6 — PDX to Newark to São Paulo
+  { iso: "2026-06-06T10:00:00-07:00", tzLabel: "Sat 10:00 AM PDT", title: "Boarding UA 2359 PDX → EWR",
+    detail: "Concourse D, Group 5. Seats 27A (Noor) / 27C (Jeff). Basic Economy. 5h 21m to EWR." },
+  { iso: "2026-06-06T10:33:00-07:00", tzLabel: "Sat 10:33 AM PDT", title: "UA 2359 wheels up",
+    detail: "Departed PDX on time." },
+  { iso: "2026-06-06T18:27:00-04:00", tzLabel: "Sat 6:27 PM EDT", title: "UA 2359 landed EWR Terminal A",
+    detail: "Landed ~27 min early. Gate ~A24." },
+  { iso: "2026-06-06T20:00:00-04:00", tzLabel: "Sat 8:00 PM EDT", title: "UA 149 EWR → GRU boarding (Terminal C)",
+    detail: "Gate C126. 777 to São Paulo. Boarded on time." },
+  { iso: "2026-06-06T22:00:00-04:00", tzLabel: "Sat 10:00 PM EDT", title: "Pushback delayed — EWR thunderstorms",
+    detail: "Sat on runway ~90 min. ATC ground hold for T-storms." },
+  // Sunday June 7 — São Paulo
+  { iso: "2026-06-07T08:00:00-03:00", tzLabel: "Sun 8:00 AM BRT", title: "UA 149 landed GRU (delayed)",
+    detail: "Arrived Terminal 1 (not the expected T2). Took ride-share to Pullman." },
+  { iso: "2026-06-07T09:30:00-03:00", tzLabel: "Sun 9:30 AM BRT", title: "Pullman dayroom check-in",
+    detail: "Pullman São Paulo Guarulhos Airport (Rod. Hélio Smidt). Conf F8Z150K4. Classic Queen + pool access. 6.5 km off-airport via Uber, ~15 min from terminal." },
+  { iso: "2026-06-07T12:00:00-03:00", tzLabel: "Sun midday BRT", title: "Uber to São Paulo (Avenida Paulista)",
+    detail: "Donor day with AZ (HiH). Coffee + Japan House Aizome Café for matcha and a settos lunch." },
+  { iso: "2026-06-07T17:00:00-03:00", tzLabel: "Sun 5:00 PM BRT", title: "Back at Pullman — extended late checkout to 7pm",
+    detail: "Room service: pizza, risotto, pumpkin salad, Heinekens Zero (R$298 / ~$57)." },
+  { iso: "2026-06-07T19:00:00-03:00", tzLabel: "Sun 7:00 PM BRT", title: "Checkout Pullman, Uber to GRU T2",
+    detail: "~15 min ride to terminal." },
+  { iso: "2026-06-07T22:55:00-03:00", tzLabel: "Sun 10:55 PM BRT", title: "LATAM LA3466 boards GRU T2",
+    detail: "Gate TBD (assigned ~21:00). Seats 18E (Jeff) / 18F (Noor). PNR JJRXVO / NICOGE. Ask agent for 18D aisle for Jeff." },
+  { iso: "2026-06-07T23:45:00-03:00", tzLabel: "Sun 11:45 PM BRT", title: "LA3466 departs GRU → IMP",
+    detail: "3hr flight. Lands IMP 02:45 AM Mon BRT." },
+  // Monday June 8 — Imperatriz
+  { iso: "2026-06-08T02:45:00-03:00", tzLabel: "Mon 2:45 AM BRT", title: "Land Imperatriz",
+    detail: "Welcome to Maranhão. Taxi to lodging, sleep first, work tomorrow." },
+  { iso: "2026-06-08T09:00:00-03:00", tzLabel: "Mon AM BRT", title: "IMP day 1 — Noor work, Jeff local",
+    detail: "Noor at Health in Harmony. Local IMP for Jeff: Beira-Rio walk, Estrela da Tarde waterfall day-trip option." },
+  // Tue-Wed-Thu — placeholder
+  { iso: "2026-06-09T09:00:00-03:00", tzLabel: "Tue 6/9 BRT", title: "IMP day 2",
+    detail: "Open day. Carolina / Chapada das Mesas day trip is a 5-6 hr round trip if either of you has a light work day." },
+  { iso: "2026-06-10T09:00:00-03:00", tzLabel: "Wed 6/10 BRT", title: "IMP day 3",
+    detail: "Open day." },
+  { iso: "2026-06-11T09:00:00-03:00", tzLabel: "Thu 6/11 BRT", title: "IMP day 4 — pack day",
+    detail: "Last full day in IMP. Pack, alarm 1:30 AM for 3:35 AM LA3435 to GRU." },
+  // Friday June 12 — IMP → ??? → Rio
+  { iso: "2026-06-12T03:35:00-03:00", tzLabel: "Fri 3:35 AM BRT", title: "LATAM LA3435 IMP → GRU",
+    detail: "The only outbound from IMP. Lands GRU 6:45 AM." },
+  { iso: "2026-06-12T06:45:00-03:00", tzLabel: "Fri 6:45 AM BRT", title: "Land GRU",
+    detail: "Onward to Rio for an overnight (route + carrier TBD)." },
+  { iso: "2026-06-12T13:00:00-03:00", tzLabel: "Fri midday BRT", title: "Arrive Rio de Janeiro",
+    detail: "Hotel: Orla Copacabana or Miramar by Windsor Copacabana (1 night). Avenida Atlântica." },
+  { iso: "2026-06-12T19:00:00-03:00", tzLabel: "Fri evening BRT", title: "Rio evening — Copacabana / beach + dinner",
+    detail: "Optional: Azymuth at Blue Note Rio Copacabana 8pm. Legendary jazz-funk-fusion trio." },
+  // Saturday June 13 — Rio + fly home
+  { iso: "2026-06-13T08:00:00-03:00", tzLabel: "Sat morning BRT", title: "Cristo Redentor",
+    detail: "Trem do Corcovado from Cosme Velho station. Allow ~3.5 hours." },
+  { iso: "2026-06-13T18:00:00-03:00", tzLabel: "Sat evening BRT", title: "Fly Rio → PDX (GIG → IAH/EWR → PDX)",
+    detail: "UA G6JTG4 modified by Noor; final routing TBD pending UA confirmation." },
+  // Sunday June 14 — back in PDX
+  { iso: "2026-06-14T11:00:00-07:00", tzLabel: "Sun 11:00 AM PDT", title: "Land PDX",
+    detail: "Welcome home. Mark's place tonight." },
+  { iso: "2026-06-14T13:00:00-07:00", tzLabel: "Sun afternoon PDT", title: "Pup pickup at Lauren Nicholl's (Sandy / Cedar Creek)",
+    detail: "Banjo + Bakso reunion. Bakso the certified fence-tester returns." },
+  { iso: "2026-06-15T10:00:00-07:00", tzLabel: "Mon 10:00 AM PDT", title: "Drop iSpring water filter return at any UPS Store",
+    detail: "Refund $116.36 to Visa-0075. Deadline today." },
+  { iso: "2026-06-16T10:00:00-07:00", tzLabel: "Tue 10:00 AM PDT", title: "Move into Barn ADU",
+    detail: "13016 SE Ramona Unit B, Portland. Lease starts." },
 ];
 
 // Noor solo trips (passport-stamp legs from the citizenship tracker).
@@ -370,6 +457,40 @@ function renderCouples() {
     </section>`;
 }
 
+function renderBrazilTimeline() {
+  if (!brazilTimeline.length) return "";
+  const now = new Date();
+  // Sort by iso for safety
+  const sorted = brazilTimeline.slice().sort((a, b) => new Date(a.iso) - new Date(b.iso));
+  // Find the "now" position: the latest event whose time is <= now, AND mark the next upcoming one as "current focus"
+  let doneCount = 0;
+  sorted.forEach(ev => { if (new Date(ev.iso) <= now) doneCount++; });
+  // Mark done / now / upcoming
+  const rendered = sorted.map((ev, idx) => {
+    const evTime = new Date(ev.iso);
+    let status;
+    if (evTime <= now) status = "done";
+    else if (idx === doneCount) status = "now"; // first upcoming = focus
+    else status = "upcoming";
+    return `
+      <div class="ev ${status}">
+        <div class="ev-when">${ev.tzLabel}</div>
+        <div class="ev-body">
+          <div class="ev-title"><span class="status-dot"></span>${ev.title}</div>
+          ${ev.detail ? `<div class="ev-detail">${ev.detail}</div>` : ""}
+        </div>
+      </div>`;
+  }).join("");
+  const total = sorted.length;
+  return `
+    <section class="briazil">
+      <div class="label">Brazil trip log</div>
+      <h3>Imperatriz + Rio · Jun 6 → Jun 14</h3>
+      <div class="briazil-sub">${doneCount} of ${total} milestones done. Times shown in local time of the event.</div>
+      ${rendered}
+    </section>`;
+}
+
 // Snapshot date stamp in the header.
 (function setSubtitle() {
   const el = document.getElementById("subtitle");
@@ -380,6 +501,7 @@ function renderCouples() {
 
 const main = document.getElementById("main");
 main.innerHTML = `
+  ${renderBrazilTimeline()}
   ${renderBasecamp(basecamps[0])}
   ${renderTransit(transit[0])}
   ${renderCouples()}
